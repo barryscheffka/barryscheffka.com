@@ -15,7 +15,7 @@ const personJsonLd = {
 
 export default function Home() {
   return (
-    <main className="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center px-4 py-16 sm:px-6">
+    <main className="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center px-6 py-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
@@ -48,13 +48,12 @@ export default function Home() {
             {site.name}
           </h1>
 
-          <nav aria-label="Elsewhere" className="flex flex-wrap gap-1.5 sm:gap-2">
+          <nav aria-label="Elsewhere" className="flex flex-wrap gap-2">
             {socials.map((s) => (
               <Button
                 key={s.platform}
                 variant="outline"
                 size="icon-lg"
-                className="size-8 sm:size-9"
                 nativeButton={false}
                 render={
                   <a
@@ -72,7 +71,6 @@ export default function Home() {
             <Button
               variant="outline"
               size="icon-lg"
-              className="size-8 sm:size-9"
               nativeButton={false}
               render={
                 <a
