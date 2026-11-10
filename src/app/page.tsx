@@ -44,45 +44,25 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col gap-6">
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            {site.name}
-          </h1>
-
-          <nav aria-label="Elsewhere" className="flex flex-wrap gap-2">
-            {socials.map((s) => (
-              <Button
-                key={s.platform}
-                variant="outline"
-                size="icon-lg"
-                nativeButton={false}
-                render={
-                  <a
-                    href={s.href}
-                    target="_blank"
-                    rel="me noopener noreferrer"
-                    aria-label={s.label}
-                    title={`${s.label} · ${s.handle}`}
-                  />
-                }
-              >
-                <BrandIcon platform={s.platform} />
-              </Button>
-            ))}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col gap-1">
+              <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+                {site.name}
+              </h1>
+              <p className="text-muted-foreground">{site.handle}</p>
+            </div>
             <Button
-              variant="outline"
-              size="icon-lg"
+              variant="default"
+              size="lg"
               nativeButton={false}
               render={
-                <a
-                  href={`mailto:${site.email}`}
-                  aria-label="Email"
-                  title={`Email · ${site.email}`}
-                />
+                <a href={`mailto:${site.email}`} title={site.email} />
               }
             >
-              <Mail />
+              <Mail data-icon="inline-start" />
+              Contact
             </Button>
-          </nav>
+          </div>
 
           <div className="flex flex-col gap-4 text-lg leading-relaxed text-muted-foreground">
             {site.intro.map((paragraph, i) => (
@@ -109,6 +89,28 @@ export default function Home() {
               </p>
             ))}
           </div>
+
+          <nav aria-label="Elsewhere" className="flex flex-wrap gap-2">
+            {socials.map((s) => (
+              <Button
+                key={s.platform}
+                variant="outline"
+                size="icon-lg"
+                nativeButton={false}
+                render={
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="me noopener noreferrer"
+                    aria-label={s.label}
+                    title={`${s.label} · ${s.handle}`}
+                  />
+                }
+              >
+                <BrandIcon platform={s.platform} />
+              </Button>
+            ))}
+          </nav>
         </div>
       </header>
     </main>
