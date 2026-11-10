@@ -25,11 +25,9 @@ export type IntroPart = string | { text: string; href?: string }
 // also the description in search results and link previews.
 const intro: IntroPart[][] = [
   [
-    "I design and build things for the devices I love, with an eye for ",
-    { text: "detail" },
-    " and ",
-    { text: "simplicity" },
-    ".",
+    "I care about how things look, how they feel, and who they bring together. Most of my time goes into ",
+    { text: "communities" },
+    ": the people in them, and the tools that help them thrive.",
   ],
   [
     "I'm a ",
