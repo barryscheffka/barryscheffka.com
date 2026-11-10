@@ -17,31 +17,24 @@ export type Social = {
   href: string
 }
 
-// A part of a sentence in the intro. Plain strings are quiet grey; objects
-// stand out in full colour, and become links when they have an href.
-export type IntroPart = string | { text: string; href?: string }
+// A part of a sentence in the intro: plain text, or a link that stands out.
+export type IntroPart = string | { text: string; href: string }
 
 // The intro below the name, one array per paragraph. The first paragraph is
 // also the description in search results and link previews.
 const intro: IntroPart[][] = [
   [
-    "I care about how things look, how they feel, and who they bring together. Most of my time goes into ",
-    { text: "communities" },
-    ": the people in them, and the tools that help them thrive.",
+    "I care about how things look, how they feel, and who they bring together. Most of my time goes into communities: the people in them, and the tools that help them thrive.",
   ],
   [
-    "I'm a ",
-    { text: "Community Solutions Manager" },
-    " at ",
+    "I'm a Community Solutions Manager at ",
     { text: "Levellr", href: "https://levellr.com" },
     ".",
   ],
   [
     "I'm also designing ",
     { text: "Vylee", href: "https://vylee.app" },
-    ", a new ",
-    { text: "family of community apps" },
-    " made to work together seamlessly.",
+    ", a new family of community apps made to work together seamlessly.",
   ],
 ]
 
@@ -56,7 +49,6 @@ export const site = {
     light: "/avatar-light.jpg",
     dark: "/avatar-dark.webp",
   },
-  email: "contact@barryscheffka.com",
 }
 
 // TODO: check each URL — handles are assumed to be @barryscheffka everywhere.

@@ -1,4 +1,3 @@
-import { Mail } from "lucide-react"
 import Image from "next/image"
 
 import { BrandIcon } from "@/components/brand-icon"
@@ -44,24 +43,11 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col gap-6">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex flex-col gap-1">
-              <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-                {site.name}
-              </h1>
-              <p className="text-muted-foreground">{site.handle}</p>
-            </div>
-            <Button
-              variant="default"
-              size="lg"
-              nativeButton={false}
-              render={
-                <a href={`mailto:${site.email}`} title={site.email} />
-              }
-            >
-              <Mail data-icon="inline-start" />
-              Contact
-            </Button>
+          <div className="flex flex-col gap-1">
+            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              {site.name}
+            </h1>
+            <p className="text-muted-foreground">{site.handle}</p>
           </div>
 
           <div className="flex flex-col gap-4 text-lg leading-relaxed text-muted-foreground">
@@ -70,7 +56,7 @@ export default function Home() {
                 {paragraph.map((part, j) =>
                   typeof part === "string" ? (
                     part
-                  ) : part.href ? (
+                  ) : (
                     <a
                       key={j}
                       href={part.href}
@@ -80,10 +66,6 @@ export default function Home() {
                     >
                       {part.text}
                     </a>
-                  ) : (
-                    <span key={j} className="text-foreground">
-                      {part.text}
-                    </span>
                   )
                 )}
               </p>
