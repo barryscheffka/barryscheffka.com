@@ -45,6 +45,12 @@ const discordEmbed = {
           media: { url: new URL(site.avatar.light, site.url).href },
         },
       },
+      {
+        type: 1, // Action Row
+        components: [
+          { type: 2, style: 5, url: site.url, label: "Visit" }, // Link button
+        ],
+      },
     ],
   },
 }
