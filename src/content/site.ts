@@ -21,36 +21,38 @@ export type Social = {
 // stand out in full colour, and become links when they have an href.
 export type IntroPart = string | { text: string; href?: string }
 
+// The intro below the name, one array per paragraph. The first paragraph is
+// also the description in search results and link previews.
+const intro: IntroPart[][] = [
+  [
+    "I design and build things for the devices I love, with an eye for ",
+    { text: "detail" },
+    " and ",
+    { text: "simplicity" },
+    ".",
+  ],
+  [
+    "I'm a ",
+    { text: "Community Solutions Manager" },
+    " at ",
+    { text: "Levellr", href: "https://levellr.com" },
+    ".",
+  ],
+  [
+    "I'm also designing ",
+    { text: "Vylee", href: "https://vylee.app" },
+    ", a new ",
+    { text: "family of community apps" },
+    " made to work together seamlessly.",
+  ],
+]
+
 export const site = {
   url: "https://barryscheffka.com",
   name: "Barry Scheffka",
   handle: "@barryscheffka",
-  // One plain sentence for search results and link previews.
-  bio: "Community Solutions Manager at Levellr, designing Vylee, a new family of community apps.",
-  // The intro below the name, one array per paragraph.
-  intro: [
-    [
-      "I design and build things for the devices I love, with an eye for ",
-      { text: "detail" },
-      " and ",
-      { text: "restraint" },
-      ".",
-    ],
-    [
-      "I'm a ",
-      { text: "Community Solutions Manager" },
-      " at ",
-      { text: "Levellr", href: "https://levellr.com" },
-      ".",
-    ],
-    [
-      "I'm also designing ",
-      { text: "Vylee", href: "https://vylee.app" },
-      ", a new ",
-      { text: "family of community apps" },
-      " made to work together seamlessly.",
-    ],
-  ] as IntroPart[][],
+  intro,
+  bio: intro[0].map((part) => (typeof part === "string" ? part : part.text)).join(""),
   // Square photos in public/, one per appearance.
   avatar: {
     light: "/avatar-light.jpg",
