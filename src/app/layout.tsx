@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     url: site.url,
     title: site.name,
     description: site.bio,
-    siteName: site.name,
+    siteName: new URL(site.url).host,
     images: [site.avatar.light],
   },
   twitter: {

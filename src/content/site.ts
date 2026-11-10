@@ -26,7 +26,7 @@ export const site = {
   name: "Barry Scheffka",
   handle: "@barryscheffka",
   // One plain sentence for search results and link previews.
-  bio: "Designing and building things for the devices I love.",
+  bio: "Community Solutions Manager at Levellr, designing Vylee, a new family of community apps.",
   // The intro below the name, one array per paragraph.
   intro: [
     [
