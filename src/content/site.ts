@@ -42,6 +42,7 @@ export const site = {
   url: "https://barryscheffka.com",
   name: "Barry Scheffka",
   handle: "@barryscheffka",
+  email: "contact@barryscheffka.com",
   intro,
   bio: intro[0].map((part) => (typeof part === "string" ? part : part.text)).join(""),
   // Square photos in public/, one per appearance.

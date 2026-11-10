@@ -47,7 +47,12 @@ export default function Home() {
             <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
               {site.name}
             </h1>
-            <p className="text-muted-foreground">{site.handle}</p>
+            <a
+              href={`mailto:${site.email}`}
+              className="w-fit text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            >
+              {site.email}
+            </a>
           </div>
 
           <div className="flex flex-col gap-4 text-lg leading-relaxed text-muted-foreground">
