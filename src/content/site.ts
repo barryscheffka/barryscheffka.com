@@ -9,6 +9,8 @@ export type Platform =
   | "youtube"
   | "tiktok"
   | "twitch"
+  | "figma"
+  | "notion"
 
 export type Social = {
   platform: Platform
@@ -48,7 +50,7 @@ export const site = {
   // Square photos in public/, one per appearance.
   avatar: {
     light: "/avatar-light.jpg",
-    dark: "/avatar-dark.webp",
+    dark: "/avatar-dark.jpg",
   },
 }
 
@@ -62,4 +64,6 @@ export const socials: Social[] = [
   { platform: "x", label: "X", handle: "@barryscheffka", href: "https://x.com/barryscheffka" },
   { platform: "twitch", label: "Twitch", handle: "barryscheffka", href: "https://www.twitch.tv/barryscheffka" },
   { platform: "threads", label: "Threads", handle: "@barryscheffka", href: "https://www.threads.com/@barryscheffka" },
+  { platform: "figma", label: "Figma Community", handle: "@barryscheffka", href: "https://www.figma.com/@barryscheffka" },
+  { platform: "notion", label: "Notion Marketplace", handle: "@barryscheffka", href: "https://www.notion.com/@barryscheffka" },
 ]
