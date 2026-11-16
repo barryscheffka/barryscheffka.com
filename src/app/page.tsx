@@ -39,11 +39,18 @@ function lensPieces(parts: IntroPart[]) {
 
 // Each letter is its own piece for the lens. Screen readers skip the letters
 // and read the plain text beside them instead.
-function Letters({ text }: { text: string }) {
+// `from` numbers the letters across a whole line (as --i) so a reveal can
+// stagger them.
+function Letters({ text, from = 0 }: { text: string; from?: number }) {
   return (
     <span aria-hidden>
       {Array.from(text).map((letter, i) => (
-        <span key={i} data-lens className="inline-block">
+        <span
+          key={i}
+          data-lens
+          className="inline-block"
+          style={{ "--i": from + i } as React.CSSProperties}
+        >
           {letter}
         </span>
       ))}
@@ -60,6 +67,12 @@ function Spoken({ text }: { text: string }) {
 const linkHover = "underline-offset-4 [&:hover_[data-lens]]:underline"
 
 function LensText({ parts }: { parts: IntroPart[] }) {
+  let count = 0
+  const next = (text: string) => {
+    const from = count
+    count += Array.from(text).length
+    return from
+  }
   return lensPieces(parts).map((piece, i) => (
     <span key={i}>
       {i > 0 && <span aria-hidden> </span>}
@@ -74,12 +87,12 @@ function LensText({ parts }: { parts: IntroPart[] }) {
               className={`text-foreground ${linkHover}`}
             >
               <Spoken text={fragment.text} />
-              <Letters text={fragment.text} />
+              <Letters text={fragment.text} from={next(fragment.text)} />
             </a>
           ) : (
             <span key={j}>
               {fragment.whole && <Spoken text={fragment.whole} />}
-              <Letters text={fragment.text} />
+              <Letters text={fragment.text} from={next(fragment.text)} />
             </span>
           )
         )}
@@ -134,7 +147,7 @@ export default function Home() {
 
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-1 select-none">
-              <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              <h1 className="reveal text-3xl font-semibold tracking-tight sm:text-4xl">
                 <LensText parts={[site.name]} />
               </h1>
               <a

@@ -128,3 +128,19 @@
     @apply font-sans;
   }
 }
+/* The name arrives letter by letter: each one rises out of a soft blur.
+   Uses `translate`, which adds to the lens's own `transform`. */
+@keyframes letter-in {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    translate: 0 0.35em;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal [data-lens] {
+    animation: letter-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i) * 45ms + 150ms);
+  }
+}
