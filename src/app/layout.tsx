@@ -24,31 +24,27 @@ export const metadata: Metadata = {
   },
 }
 
-// The card Discord shows for a pasted link, built from Discord components
-// (docs.discord.com/developers/link-previews/component-embeds). No
-// accent_color, so the container has no coloured edge. The Open Graph tags
-// above stay as the fallback.
 const discordEmbed = {
   component: {
-    type: 17, // Container
+    type: 17,
     components: [
       {
-        type: 9, // Section
+        type: 9,
         components: [
           {
-            type: 10, // Text Display
+            type: 10,
             content: `## [${site.name}](${site.url})\n${site.bio}`,
           },
         ],
         accessory: {
-          type: 11, // Thumbnail
+          type: 11,
           media: { url: new URL(site.avatar.light, site.url).href },
         },
       },
       {
-        type: 1, // Action Row
+        type: 1,
         components: [
-          { type: 2, style: 5, url: site.url, label: "Visit" }, // Link button
+          { type: 2, style: 5, url: site.url, label: "Visit" },
         ],
       },
     ],

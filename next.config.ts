@@ -1,9 +1,9 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  // Plain files in out/, served by Cloudflare Pages.
   output: "export",
   images: { unoptimized: true },
+  agentRules: false,
   turbopack: {
     rules: {
       "*.css": {
@@ -12,6 +12,6 @@ const nextConfig: NextConfig = {
       },
     },
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

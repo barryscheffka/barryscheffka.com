@@ -2,22 +2,12 @@
 
 import { useEffect, useRef } from "react"
 
-// A soft magnifying bulge that follows the mouse, made from the page's own
-// elements: every [data-lens] element (a word, a button, the photo) moves
-// away from the cursor and grows by how close it is, along the same smooth
-// falloff a glass lens would have. Only transforms, so it works in every
-// browser and text stays crisp.
-
-const RADIUS = 240 // px; nothing beyond this distance moves
-const MAGNIFY = 0.1 // the element right under the cursor grows by 10%
-// Push and growth fall off as (1 − r)³ and (1 − r)⁴ of the distance r. The
-// push peaks a quarter of the way out and then eases back over the rest, so
-// neighbouring words drift together by at most 2.5% of their spacing and
-// never close the gap between them.
-const FOLLOW = 10 // how quickly the lens catches up with the cursor, per second
-const FADE_IN = 7 // how quickly it appears, per second
-const FADE_OUT = 8 // how quickly it settles back, per second
-const REST = 250 // ms without movement before it settles back
+const RADIUS = 240
+const MAGNIFY = 0.1
+const FOLLOW = 10
+const FADE_IN = 7
+const FADE_OUT = 8
+const REST = 250
 
 type Unit = { el: HTMLElement; x: number; y: number; last: string }
 
@@ -33,7 +23,6 @@ export function Lens({ children }: { children: React.ReactNode }) {
     if (!wanted.matches) return
 
     let units: Unit[] = []
-    // Centres relative to the root, measured without any lens transform.
     const measure = () => {
       const base = root.getBoundingClientRect()
       units = Array.from(root.querySelectorAll<HTMLElement>("[data-lens]")).map(

@@ -1,10 +1,12 @@
 # barryscheffka.com
 
-A one-page personal hub, built with Next.js and stock shadcn/ui.
+My personal site, built with Next.js and shadcn/ui and served from Cloudflare.
 
-All content lives in `src/content/site.ts`; the photos are in `public/`.
+The text and links are in `src/content/site.ts`, the photos in `public/`.
 
 ```bash
 npm install
 npm run dev
 ```
+
+Pushes to `main` deploy automatically.

@@ -12,9 +12,6 @@ import {
 } from "@/components/ui/tooltip"
 import { site, socials, type IntroPart } from "@/content/site"
 
-// A word-sized piece of text: a word, or a link with any punctuation touching
-// it, so "Levellr." never breaks across lines. `whole` is the full plain-text
-// run the piece starts, read out once by screen readers.
 type Fragment = { text: string; href?: string; whole?: string }
 
 function lensPieces(parts: IntroPart[]) {
@@ -37,10 +34,6 @@ function lensPieces(parts: IntroPart[]) {
   return pieces.filter((piece) => piece.length > 0)
 }
 
-// Each letter is its own piece for the lens. Screen readers skip the letters
-// and read the plain text beside them instead.
-// `from` numbers the letters across a whole line (as --i) so a reveal can
-// stagger them.
 function Letters({ text, from = 0 }: { text: string; from?: number }) {
   return (
     <span aria-hidden>
@@ -62,8 +55,6 @@ function Spoken({ text }: { text: string }) {
   return <span className="sr-only">{text}</span>
 }
 
-// Underlines don't reach into the letter pieces, so links underline the
-// letters themselves on hover.
 const linkHover = "underline-offset-4 [&:hover_[data-lens]]:underline"
 
 function LensText({ parts }: { parts: IntroPart[] }) {
