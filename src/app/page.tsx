@@ -2,6 +2,12 @@ import Image from "next/image"
 
 import { BrandIcon } from "@/components/brand-icon"
 import { Button } from "@/components/ui/button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { site, socials } from "@/content/site"
 
 const personJsonLd = {
@@ -78,25 +84,32 @@ export default function Home() {
           </div>
 
           <nav aria-label="Elsewhere" className="flex flex-wrap gap-2">
-            {socials.map((s) => (
-              <Button
-                key={s.platform}
-                variant="outline"
-                size="icon-lg"
-                nativeButton={false}
-                render={
-                  <a
-                    href={s.href}
-                    target="_blank"
-                    rel="me noopener noreferrer"
-                    aria-label={s.label}
-                    title={`${s.label} · ${s.handle}`}
-                  />
-                }
-              >
-                <BrandIcon platform={s.platform} />
-              </Button>
-            ))}
+            <TooltipProvider>
+              {socials.map((s) => (
+                <Tooltip key={s.platform}>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant="outline"
+                        size="icon-lg"
+                        nativeButton={false}
+                        render={
+                          <a
+                            href={s.href}
+                            target="_blank"
+                            rel="me noopener noreferrer"
+                            aria-label={s.label}
+                          />
+                        }
+                      />
+                    }
+                  >
+                    <BrandIcon platform={s.platform} />
+                  </TooltipTrigger>
+                  <TooltipContent>{s.label}</TooltipContent>
+                </Tooltip>
+              ))}
+            </TooltipProvider>
           </nav>
         </div>
       </header>
