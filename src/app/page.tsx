@@ -1,8 +1,9 @@
+import { cn } from "cn"
 import Image from "next/image"
 
 import { BrandIcon } from "@/components/brand-icon"
 import { Lens } from "@/components/lens"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import {
   Tooltip,
   TooltipContent,
@@ -11,52 +12,75 @@ import {
 } from "@/components/ui/tooltip"
 import { site, socials, type IntroPart } from "@/content/site"
 
-// Splits text into words; a link and any punctuation touching it stay one
-// word, so "Levellr." never breaks across lines.
+// A word-sized piece of text: a word, or a link with any punctuation touching
+// it, so "Levellr." never breaks across lines. `whole` is the full plain-text
+// run the piece starts, read out once by screen readers.
+type Fragment = { text: string; href?: string; whole?: string }
+
 function lensPieces(parts: IntroPart[]) {
-  const pieces: IntroPart[][] = [[]]
+  const pieces: Fragment[][] = [[]]
   for (const part of parts) {
     if (typeof part !== "string") {
-      pieces[pieces.length - 1].push(part)
+      pieces[pieces.length - 1].push({ text: part.text, href: part.href })
       continue
     }
+    let whole: string | undefined = part
     for (const token of part.split(/(\s+)/)) {
       if (!token) continue
       if (/^\s+$/.test(token)) pieces.push([])
-      else pieces[pieces.length - 1].push(token)
+      else {
+        pieces[pieces.length - 1].push({ text: token, whole })
+        whole = undefined
+      }
     }
   }
   return pieces.filter((piece) => piece.length > 0)
 }
 
-// Each letter is its own piece for the lens. Underlines don't reach into
-// these pieces, so links underline the letters themselves on hover.
+// Each letter is its own piece for the lens. Screen readers skip the letters
+// and read the plain text beside them instead.
 function Letters({ text }: { text: string }) {
-  return Array.from(text).map((letter, i) => (
-    <span key={i} data-lens className="inline-block">
-      {letter}
+  return (
+    <span aria-hidden>
+      {Array.from(text).map((letter, i) => (
+        <span key={i} data-lens className="inline-block">
+          {letter}
+        </span>
+      ))}
     </span>
-  ))
+  )
 }
+
+function Spoken({ text }: { text: string }) {
+  return <span className="sr-only">{text}</span>
+}
+
+// Underlines don't reach into the letter pieces, so links underline the
+// letters themselves on hover.
+const linkHover = "underline-offset-4 [&:hover_[data-lens]]:underline"
 
 function LensText({ parts }: { parts: IntroPart[] }) {
   return lensPieces(parts).map((piece, i) => (
     <span key={i}>
-      {i > 0 && " "}
+      {i > 0 && <span aria-hidden> </span>}
       <span className="inline-block whitespace-nowrap">
-        {piece.map((part, j) =>
-          typeof part === "string" ? (
-            <Letters key={j} text={part} />
-          ) : (
+        {piece.map((fragment, j) =>
+          fragment.href ? (
             <a
               key={j}
-              href={part.href}
+              href={fragment.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-foreground underline-offset-4 [&:hover>span]:underline"
+              className={`text-foreground ${linkHover}`}
             >
-              <Letters text={part.text} />
+              <Spoken text={fragment.text} />
+              <Letters text={fragment.text} />
             </a>
+          ) : (
+            <span key={j}>
+              {fragment.whole && <Spoken text={fragment.whole} />}
+              <Letters text={fragment.text} />
+            </span>
           )
         )}
       </span>
@@ -115,8 +139,9 @@ export default function Home() {
               </h1>
               <a
                 href={`mailto:${site.email}`}
-                className="w-fit whitespace-nowrap text-muted-foreground underline-offset-4 hover:text-foreground [&:hover>span]:underline"
+                className={`w-fit whitespace-nowrap text-muted-foreground hover:text-foreground ${linkHover}`}
               >
+                <Spoken text={site.email} />
                 <Letters text={site.email} />
               </a>
             </div>
@@ -135,20 +160,16 @@ export default function Home() {
                   <Tooltip key={s.platform}>
                     <TooltipTrigger
                       render={
-                        <Button
-                          variant="outline"
-                          size="icon-lg"
-                          nativeButton={false}
-                          className="transition-[color,background-color,border-color,box-shadow]"
-                          render={
-                            <a
-                              data-lens
-                              href={s.href}
-                              target="_blank"
-                              rel="me noopener noreferrer"
-                              aria-label={s.label}
-                            />
-                          }
+                        <a
+                          data-lens
+                          href={s.href}
+                          target="_blank"
+                          rel="me noopener noreferrer"
+                          aria-label={s.label}
+                          className={cn(
+                            buttonVariants({ variant: "outline", size: "icon-lg" }),
+                            "transition-[color,background-color,border-color,box-shadow]"
+                          )}
                         />
                       }
                     >

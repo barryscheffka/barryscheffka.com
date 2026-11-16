@@ -16,8 +16,8 @@ const MAGNIFY = 0.1 // the element right under the cursor grows by 10%
 // never close the gap between them.
 const FOLLOW = 10 // how quickly the lens catches up with the cursor, per second
 const FADE_IN = 7 // how quickly it appears, per second
-const FADE_OUT = 8 // how quickly it settles back, per second
-const REST = 250 // ms without movement before it settles back
+const FADE_OUT = 14 // how quickly it settles back, per second
+const REST = 120 // ms without movement before it settles back
 
 type Unit = { el: HTMLElement; x: number; y: number; last: string }
 
