@@ -1,6 +1,7 @@
 import Image from "next/image"
 
 import { BrandIcon } from "@/components/brand-icon"
+import { Lens } from "@/components/lens"
 import { Button } from "@/components/ui/button"
 import {
   Tooltip,
@@ -8,7 +9,60 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { site, socials } from "@/content/site"
+import { site, socials, type IntroPart } from "@/content/site"
+
+// Splits text into words; a link and any punctuation touching it stay one
+// word, so "Levellr." never breaks across lines.
+function lensPieces(parts: IntroPart[]) {
+  const pieces: IntroPart[][] = [[]]
+  for (const part of parts) {
+    if (typeof part !== "string") {
+      pieces[pieces.length - 1].push(part)
+      continue
+    }
+    for (const token of part.split(/(\s+)/)) {
+      if (!token) continue
+      if (/^\s+$/.test(token)) pieces.push([])
+      else pieces[pieces.length - 1].push(token)
+    }
+  }
+  return pieces.filter((piece) => piece.length > 0)
+}
+
+// Each letter is its own piece for the lens. Underlines don't reach into
+// these pieces, so links underline the letters themselves on hover.
+function Letters({ text }: { text: string }) {
+  return Array.from(text).map((letter, i) => (
+    <span key={i} data-lens className="inline-block">
+      {letter}
+    </span>
+  ))
+}
+
+function LensText({ parts }: { parts: IntroPart[] }) {
+  return lensPieces(parts).map((piece, i) => (
+    <span key={i}>
+      {i > 0 && " "}
+      <span className="inline-block whitespace-nowrap">
+        {piece.map((part, j) =>
+          typeof part === "string" ? (
+            <Letters key={j} text={part} />
+          ) : (
+            <a
+              key={j}
+              href={part.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground underline-offset-4 [&:hover>span]:underline"
+            >
+              <Letters text={part.text} />
+            </a>
+          )
+        )}
+      </span>
+    </span>
+  ))
+}
 
 const personJsonLd = {
   "@context": "https://schema.org",
@@ -26,93 +80,88 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
 
-      <header className="flex flex-col gap-8 motion-safe:animate-in motion-safe:duration-700 motion-safe:fade-in motion-safe:slide-in-from-bottom-4">
-        <div className="aspect-square w-28 overflow-hidden rounded-3xl bg-muted">
-          <Image
-            src={site.avatar.light}
-            alt={site.name}
-            width={480}
-            height={480}
-            sizes="112px"
-            priority
-            className="size-full object-cover dark:hidden"
-          />
-          <Image
-            src={site.avatar.dark}
-            alt={site.name}
-            width={480}
-            height={480}
-            sizes="112px"
-            priority
-            className="hidden size-full object-cover dark:block"
-          />
-        </div>
-
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              {site.name}
-            </h1>
-            <a
-              href={`mailto:${site.email}`}
-              className="w-fit text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-            >
-              {site.email}
-            </a>
+      <Lens>
+        <header className="flex flex-col gap-8 motion-safe:animate-in motion-safe:duration-700 motion-safe:fade-in motion-safe:slide-in-from-bottom-4">
+          <div
+            data-lens
+            className="aspect-square w-28 overflow-hidden rounded-3xl bg-muted select-none [-webkit-touch-callout:none]"
+          >
+            <Image
+              src={site.avatar.light}
+              alt={site.name}
+              width={480}
+              height={480}
+              sizes="112px"
+              priority
+              draggable={false}
+              className="size-full object-cover dark:hidden"
+            />
+            <Image
+              src={site.avatar.dark}
+              alt={site.name}
+              width={480}
+              height={480}
+              sizes="112px"
+              priority
+              draggable={false}
+              className="hidden size-full object-cover dark:block"
+            />
           </div>
 
-          <div className="flex flex-col gap-4 text-lg leading-relaxed text-muted-foreground">
-            {site.intro.map((paragraph, i) => (
-              <p key={i}>
-                {paragraph.map((part, j) =>
-                  typeof part === "string" ? (
-                    part
-                  ) : (
-                    <a
-                      key={j}
-                      href={part.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-foreground underline-offset-4 hover:underline"
-                    >
-                      {part.text}
-                    </a>
-                  )
-                )}
-              </p>
-            ))}
-          </div>
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-1 select-none">
+              <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+                <LensText parts={[site.name]} />
+              </h1>
+              <a
+                href={`mailto:${site.email}`}
+                className="w-fit whitespace-nowrap text-muted-foreground underline-offset-4 hover:text-foreground [&:hover>span]:underline"
+              >
+                <Letters text={site.email} />
+              </a>
+            </div>
 
-          <nav aria-label="Elsewhere" className="flex flex-wrap gap-2">
-            <TooltipProvider>
-              {socials.map((s) => (
-                <Tooltip key={s.platform}>
-                  <TooltipTrigger
-                    render={
-                      <Button
-                        variant="outline"
-                        size="icon-lg"
-                        nativeButton={false}
-                        render={
-                          <a
-                            href={s.href}
-                            target="_blank"
-                            rel="me noopener noreferrer"
-                            aria-label={s.label}
-                          />
-                        }
-                      />
-                    }
-                  >
-                    <BrandIcon platform={s.platform} />
-                  </TooltipTrigger>
-                  <TooltipContent>{s.label}</TooltipContent>
-                </Tooltip>
+            <div className="flex flex-col gap-4 text-lg leading-relaxed text-muted-foreground select-none">
+              {site.intro.map((paragraph, i) => (
+                <p key={i}>
+                  <LensText parts={paragraph} />
+                </p>
               ))}
-            </TooltipProvider>
-          </nav>
-        </div>
-      </header>
+            </div>
+
+            <nav aria-label="Elsewhere" className="flex flex-wrap gap-2">
+              <TooltipProvider>
+                {socials.map((s) => (
+                  <Tooltip key={s.platform}>
+                    <TooltipTrigger
+                      render={
+                        <Button
+                          variant="outline"
+                          size="icon-lg"
+                          nativeButton={false}
+                          className="transition-[color,background-color,border-color,box-shadow]"
+                          render={
+                            <a
+                              data-lens
+                              href={s.href}
+                              target="_blank"
+                              rel="me noopener noreferrer"
+                              aria-label={s.label}
+                            />
+                          }
+                        />
+                      }
+                    >
+                      <BrandIcon platform={s.platform} />
+                    </TooltipTrigger>
+                    <TooltipContent>{s.label}</TooltipContent>
+                  </Tooltip>
+                ))}
+              </TooltipProvider>
+            </nav>
+          </div>
+        </header>
+      </Lens>
     </main>
   )
 }
