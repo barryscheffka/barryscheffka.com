@@ -15,7 +15,9 @@ const MAGNIFY = 0.1 // the element right under the cursor grows by 10%
 // neighbouring words drift together by at most 2.5% of their spacing and
 // never close the gap between them.
 const FOLLOW = 10 // how quickly the lens catches up with the cursor, per second
-const FADE = 7 // how quickly it appears and disappears, per second
+const FADE_IN = 7 // how quickly it appears, per second
+const FADE_OUT = 8 // how quickly it settles back, per second
+const REST = 250 // ms without movement before it settles back
 
 type Unit = { el: HTMLElement; x: number; y: number; last: string }
 
@@ -56,6 +58,7 @@ export function Lens({ children }: { children: React.ReactNode }) {
     let strength = 0
     let last = 0
     let frame = 0
+    let rest = 0
 
     const tick = (now: number) => {
       const dt = last ? Math.min((now - last) / 1000, 0.05) : 1 / 60
@@ -63,7 +66,8 @@ export function Lens({ children }: { children: React.ReactNode }) {
       const follow = 1 - Math.exp(-dt * FOLLOW)
       pos.x += (target.x - pos.x) * follow
       pos.y += (target.y - pos.y) * follow
-      strength += (want - strength) * (1 - Math.exp(-dt * FADE))
+      const fade = want > strength ? FADE_IN : FADE_OUT
+      strength += (want - strength) * (1 - Math.exp(-dt * fade))
       if (want === 0 && strength < 0.001) strength = 0
 
       const base = root.getBoundingClientRect()
@@ -114,8 +118,11 @@ export function Lens({ children }: { children: React.ReactNode }) {
       }
       want = 1
       wake()
+      clearTimeout(rest)
+      rest = window.setTimeout(onLeave, REST)
     }
-    const onLeave = () => {
+    function onLeave() {
+      clearTimeout(rest)
       want = 0
       wake()
     }
@@ -132,6 +139,7 @@ export function Lens({ children }: { children: React.ReactNode }) {
     window.addEventListener("scroll", wake, { passive: true })
     return () => {
       cancelAnimationFrame(frame)
+      clearTimeout(rest)
       resize.disconnect()
       window.removeEventListener("pointermove", onMove)
       document.documentElement.removeEventListener("pointerleave", onLeave)
