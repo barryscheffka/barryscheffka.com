@@ -29,7 +29,7 @@ const intro: IntroPart[][] = [
   ],
   [
     "I'm also designing ",
-    { text: "Vylee", href: "https://vylee.app" },
+    { text: "Velice", href: "https://velice.app" },
     ", a new family of community apps made to work together seamlessly.",
   ],
 ]
